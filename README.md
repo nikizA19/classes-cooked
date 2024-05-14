@@ -21,10 +21,8 @@ public:
     Property(){}
     //конструктор с параметри
         Property(const string& owner, double val) : ownerName(owner), value(val) {}
-    
-    // Конструктор по копиране
+        // Конструктор по копиране
     Property(const Property& other) : ownerName(other.ownerName), value(other.value) {}
-
     // Оператор за присвояване
     Property& operator=(const Property& other) {
         if (this != &other) {
@@ -33,23 +31,19 @@ public:
         }
         return *this;
     }
-
     // Чисто виртуална функция за изчисляване на данъка
     virtual double calculateTax() const = 0;
-     
-     // Функции за извеждане и въвеждане на данни от/в поток
+     //Функции за извеждане и въвеждане на данни от/в поток
     virtual void input(istream& in){
         cout<<"Enter owner name";
         in>>ownerName;
         cout<<"Enter property value:";
         in>>value;
     }
-
     virtual void output(ostream& out){
         out<<"Onwer Name: "<< ownerName <<endl;
         out <<" Property value: "<< value <<endl;
     }
-
     // Виртуален деструктор за правилното изтриване на обекти от производните класове
     virtual ~Property() {}
 };
@@ -73,7 +67,6 @@ private:
 public:
     Appartment(const string& owner, double val, const string& addr, double ar)
         : Property(owner, val), address(addr), area(ar) {}
-
     // Голямата четворка
     Appartment(const Appartment& other) : Property(other), address(other.address), area(other.area) {}
     Appartment& operator=(const Appartment& other) {
@@ -84,11 +77,9 @@ public:
         }
         return *this;
     }
-
     double taxCalculation() const override {
         return value * 0.001;
     }
-
     // Преепокриване на функциите за извеждане и въвеждане на данни
     void input(istream& in) override {
         Property::input(in);
@@ -97,7 +88,6 @@ public:
         cout << "Enter area: ";
         in >> area;
     }
-
     void output(ostream& out) const override {
         Property::output(out);
         out << "Address: " << address << endl;
@@ -112,7 +102,6 @@ private:
 
 public:
     CountryHouse(const string& owner, double val, bool garden) : Property(owner, val), hasGarden(garden) {}
-
     // Голямата четворка
     CountryHouse(const CountryHouse& other) : Property(other), hasGarden(other.hasGarden) {}
     CountryHouse& operator=(const CountryHouse& other) {
@@ -122,18 +111,15 @@ public:
         }
         return *this;
     }
-
     double taxCalculation() const override {
         return value * 0.002;
     }
-
     // Преепокриване на функциите за извеждане и въвеждане на данни
     void input(istream& in) override {
         Property::input(in);
         cout << "Does it have a garden? (1 for Yes, 0 for No): ";
         in >> hasGarden;
     }
-
     void output(ostream& out) const override {
         Property::output(out);
         out << "Has a garden: " << (hasGarden ? "Yes" : "No") << endl;
@@ -150,7 +136,6 @@ private:
 public:
     Car(const string& owner, double val, const string& br, const string& mdl, int yr)
         : Property(owner, val), brand(br), model(mdl), year(yr) {}
-
     // Голямата четворка
     Car(const Car& other) : Property(other), brand(other.brand), model(other.model), year(other.year) {}
     Car& operator=(const Car& other) {
@@ -162,11 +147,9 @@ public:
         }
         return *this;
     }
-
     double taxCalculation() const override {
         return value * 0.005;
     }
-
     // Преепокриване на функциите за извеждане и въвеждане на данни
     void input(istream& in) override {
         Property::input(in);
@@ -177,7 +160,6 @@ public:
         cout << "Enter year: ";
         in >> year;
     }
-
     void output(ostream& out) const override {
         Property::output(out);
         out << "Brand: " << brand << endl;
@@ -188,27 +170,26 @@ public:
 
 
 int main(){
-
     Appartment apt("John Doe", 100000, "123 Main St", 80);
     Car car("Alice Smith", 20000, "Toyota", "Corolla", 2015);
     CountryHouse house("Bob Johnson", 150000, true);
-
     // Извеждане на данните за всяко имущество
     cout << "Appartment details:" << endl;
     apt.output(cout);
+    //
     cout << "Tax for the appartment: $" << apt.taxCalculation() << endl;
     cout << endl;
-
     cout << "Car details:" << endl;
+    //
     car.output(cout);
     cout << "Tax for the car: $" << car.taxCalculation() << endl;
     cout << endl;
-
     cout << "Country house details:" << endl;
+    //
     house.output(cout);
     cout << "Tax for the country house: $" << house.taxCalculation() << endl;
     cout << endl;
-
+    //
     return 0;
     
 
