@@ -2,17 +2,18 @@
     #include <fstream>
     #include <string>
     
-    namespace std;
+    using namespace std;
     
+    template<typename T>
     class Shape {
     protected:
-        double height;
-        double width;
+        T height;
+        T width;
         int figureNumber;
         string title;
     
     public:
-        Shape(double h, double w, int number, const string& t) 
+        Shape(T h, T w, int number, const string& t) 
             : height(h), width(w), figureNumber(number), title(t) {}
 
     virtual ~Shape() {}
@@ -31,74 +32,77 @@
         is >> height >> width >> figureNumber >> title;
     }
     };
-
-    class Triangle : public Shape {
+    
+    template<typename T>
+    class Triangle : public Shape<T> {
     public:
-        Triangle(double h, double w, int number, const string& t) 
-            : Shape(h, w, number, t) {}
+        Triangle(T h, T w, int number, const string& t) 
+            : Shape<T>(h, w, number, t) {}
 
     ~Triangle() {}
 
     double calculateSurface() const override {
-        return (height * width) / 2;
+        return (this->height * this->width) / 2;
     }
 
     void read(istream& is) override {
-        Shape::read(is);
+        Shape<T>::read(is);
     }
 
     void print(ostream& os) const override {
-        Shape::print(os);
+        Shape<T>::print(os);
     }
-};
-
-     class Rectangle : public Shape {
+    };
+    
+    template<typename T>
+    class Rectangle : public Shape<T> {
     public:
-       Rectangle(double h, double w, int number, const string& t) 
-        : Shape(h, w, number, t) {}
+        Rectangle(T h, T w, int number, const string& t) 
+            : Shape<T>(h, w, number, t) {}
 
     ~Rectangle() {}
 
     double calculateSurface() const override {
-        return height * width;
+        return this->height * this->width;
     }
 
     void read(istream& is) override {
-        Shape::read(is);
+        Shape<T>::read(is);
     }
 
     void print(ostream& os) const override {
-        Shape::print(os);
+        Shape<T>::print(os);
     }
     };
-
-    class Circle : public Shape {
+    
+    template<typename T>
+    class Circle : public Shape<T> {
     public:
-    Circle(double r, int number, const string& t) 
-        : Shape(r, r, number, t) {} // Height and width are both radius
+        Circle(T r, int number, const string& t) 
+            : Shape<T>(r, r, number, t) {} // Height and width are both radius
 
     ~Circle() {}
 
     double calculateSurface() const override {
-        return 3.14159 * height * height;
+        return 3.14159 * this->height * this->height;
     }
 
     void read(istream& is) override {
-        Shape::read(is);
+        Shape<T>::read(is);
     }
 
     void print(ostream& os) const override {
-        Shape::print(os);
+        Shape<T>::print(os);
     }
     };
- 
-    int main() {
-    Shape* shapes[3];
-    shapes[0] = new Triangle(5, 10, 1, "Triangle");
-    shapes[1] = new Rectangle(6, 8, 2, "Rectangle");
-    shapes[2] = new Circle(4, 3, "Circle");
 
-    ofstream outFile("figures.txt");
+    int main() {
+    Shape<double>* shapes[3];
+    shapes[0] = new Triangle<double>(2, 5, 10, "Triangle");
+    shapes[1] = new Rectangle<double>(5, 5, 5, "Rectangle");
+    shapes[2] = new Circle<double>(5, 2, "Circle");
+
+    ofstream outFile("figure.txt");
     if (outFile.is_open()) {
         for (int i = 0; i < 3; ++i) {
             shapes[i]->print(outFile);
@@ -114,4 +118,4 @@
     }
 
     return 0;
-}
+    }
