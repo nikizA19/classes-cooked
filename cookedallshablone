@@ -1,0 +1,187 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+template<typename ValueType>
+class Property {
+protected:
+    string ownerName;
+    ValueType value;
+
+public:
+    Property(const string& owner, ValueType val) : ownerName(owner), value(val) {}
+    Property(const Property& other) : ownerName(other.ownerName), value(other.value) {}
+    Property& operator=(const Property& other) {
+        if (this != &other) {
+            ownerName = other.ownerName;
+            value = other.value;
+        }
+        return *this;
+    }
+
+    virtual double taxCalculation() const = 0;
+
+    virtual void output(ostream& out) const;
+
+    virtual void input(istream& in) {
+        cout << "Enter owner name: ";
+        in >> ownerName;
+        cout << "Enter property value: ";
+        in >> value;
+    }
+
+    virtual ~Property() {}
+};
+
+template<typename ValueType>
+void Property<ValueType>::output(ostream& out) const {
+    out << "Owner name: " << ownerName << endl;
+    out << "Property value: " << value << endl;
+}
+
+template<typename ValueType>
+class Appartment : public Property<ValueType> {
+private:
+    string address;
+    ValueType area;
+
+public:
+    Appartment(const string& owner, ValueType val, const string& addr, ValueType ar)
+        : Property<ValueType>(owner, val), address(addr), area(ar) {}
+
+    Appartment(const Appartment& other)
+        : Property<ValueType>(other), address(other.address), area(other.area) {}
+
+    Appartment& operator=(const Appartment& other) {
+        if (this != &other) {
+            Property<ValueType>::operator=(other);
+            address = other.address;
+            area = other.area;
+        }
+        return *this;
+    }
+
+    double taxCalculation() const override {
+        return this->value * 0.001;
+    }
+
+    void input(istream& in) override {
+        Property<ValueType>::input(in);
+        cout << "Enter address: ";
+        in >> address;
+        cout << "Enter area: ";
+        in >> area;
+    }
+
+    void output(ostream& out) const override {
+        Property<ValueType>::output(out);
+        out << "Address: " << address << endl;
+        out << "Area: " << area << endl;
+    }
+};
+
+template<typename ValueType>
+class CountryHouse : public Property<ValueType> {
+private:
+    bool hasGarden;
+
+public:
+    CountryHouse(const string& owner, ValueType val, bool garden) 
+        : Property<ValueType>(owner, val), hasGarden(garden) {}
+
+    CountryHouse(const CountryHouse& other) 
+        : Property<ValueType>(other), hasGarden(other.hasGarden) {}
+
+    CountryHouse& operator=(const CountryHouse& other) {
+        if (this != &other) {
+            Property<ValueType>::operator=(other);
+            hasGarden = other.hasGarden;
+        }
+        return *this;
+    }
+
+    double taxCalculation() const override {
+        return this->value * 0.002;
+    }
+
+    void input(istream& in) override {
+        Property<ValueType>::input(in);
+        cout << "Does it have a garden? (1 for Yes, 0 for No): ";
+        in >> hasGarden;
+    }
+
+    void output(ostream& out) const override {
+        Property<ValueType>::output(out);
+        out << "Has a garden: " << (hasGarden ? "Yes" : "No") << endl;
+    }
+};
+
+template<typename ValueType>
+class Car : public Property<ValueType> {
+private:
+    string brand;
+    string model;
+    int year;
+
+public:
+    Car(const string& owner, ValueType val, const string& br, const string& mdl, int yr)
+        : Property<ValueType>(owner, val), brand(br), model(mdl), year(yr) {}
+
+    Car(const Car& other)
+        : Property<ValueType>(other), brand(other.brand), model(other.model), year(other.year) {}
+
+    Car& operator=(const Car& other) {
+        if (this != &other) {
+            Property<ValueType>::operator=(other);
+            brand = other.brand;
+            model = other.model;
+            year = other.year;
+        }
+        return *this;
+    }
+
+    double taxCalculation() const override {
+        return this->value * 0.005;
+    }
+
+    void input(istream& in) override {
+        Property<ValueType>::input(in);
+        cout << "Enter brand: ";
+        in >> brand;
+        cout << "Enter model: ";
+        in >> model;
+        cout << "Enter year: ";
+        in >> year;
+    }
+
+    void output(ostream& out) const override {
+        Property<ValueType>::output(out);
+        out << "Brand: " << brand << endl;
+        out << "Model: " << model << endl;
+        out << "Year: " << year << endl;
+    }
+};
+
+int main() {
+    Appartment<double> apt("John Doe", 100000, "123 Main St", 80);
+    Car<int> car("Alice Smith", 20000, "Toyota", "Corolla", 2015);
+    CountryHouse<double> house("Bob Johnson", 150000, true);
+
+    cout << "Appartment details:" << endl;
+    apt.output(cout);
+    cout << "Tax for the appartment: $" << apt.taxCalculation() << endl;
+    cout << endl;
+
+    cout << "Car details:" << endl;
+    car.output(cout);
+    cout << "Tax for the car: $" << car.taxCalculation() << endl;
+    cout << endl;
+
+    cout << "Country house details:" << endl;
+    house.output(cout);
+    cout << "Tax for the country house: $" << house.taxCalculation() << endl;
+    cout << endl;
+
+    return 0;
+}
